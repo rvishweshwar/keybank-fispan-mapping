@@ -330,14 +330,14 @@ tbody tr:hover td{background:#f8fcfc;}
     </div>
     <div class="sum-col">
       <h3>⚡ Automated API Flow</h3>
-      <div class="sum-item"><div class="sum-dot" style="background:var(--teal)"></div>13 API calls, fully programmatic</div>
+      <div class="sum-item"><div class="sum-dot" style="background:var(--teal)"></div>14 API calls, fully programmatic</div>
       <div class="sum-item"><div class="sum-dot" style="background:var(--teal)"></div>Instant provisioning on submit</div>
       <div class="sum-item"><div class="sum-dot" style="background:var(--teal)"></div>Idempotency keys — safe retries</div>
       <div class="sum-item"><div class="sum-dot" style="background:var(--teal)"></div>Full audit trail per request</div>
       <div class="sum-item"><div class="sum-dot" style="background:#d97706"></div>Approval App endpoint pending</div>
     </div>
     <div class="api-count-box">
-      <div class="api-count-num">13</div>
+      <div class="api-count-num">14</div>
       <div class="api-count-lbl">API Calls to<br>fully onboard</div>
     </div>
   </div>
@@ -360,13 +360,13 @@ tbody tr:hover td{background:#f8fcfc;}
       <div id="blueGaps"></div>
     </div>
   </div>
-  <div class="oq-card">
-    <div class="oq-hdr">⚠️ Open Questions — Needs Confirmation Before Implementation</div>
+  <div class="oq-card" style="border-left-color:var(--green);">
+    <div class="oq-hdr" style="background:var(--green-bg);color:var(--green);">✅ Resolved — Previously Open Questions</div>
     <div class="oq-item">
-      <div class="oq-icon">❓</div>
+      <div class="oq-icon">✅</div>
       <div>
-        <div class="oq-field">ACH Short Name → accountHolderName mapping</div>
-        <div class="oq-desc">The form collects an ACH Short Name (16-char) per account (e.g. "ASAPGARAGEDOORRE", "AFFORDABLEDIVISI"). It is <strong>unclear</strong> whether this maps to <code>accountHolderName</code> in the FISPAN bank-account payload. This field has been <strong>omitted from all payloads</strong> until confirmed. Needs verification with FISPAN partner engineering before implementation.</div>
+        <div class="oq-field">ACH Short Name → accountHolderName mapping — RESOLVED</div>
+        <div class="oq-desc">Confirmed per KeyBank Onboarding Form Guide (Confluence): <strong>ACH Short Name</strong> maps to <code>accountHolderName</code> on the bank-account payload for all ACH/Wire-enabled accounts. For accounts where Positive Pay / Check Outsourcing is the primary product, use <strong>Name on Checks</strong> instead. The <code>accountHolderName</code> field (max 32 chars) overrides the Payer Name in payment transmissions and FISPAN Remittance Advice emails. All bank account payloads have been updated to include this field.</div>
       </div>
     </div>
   </div>
@@ -400,18 +400,18 @@ tbody tr:hover td{background:#f8fcfc;}
         </div>
         <div style="background:var(--gray-50);border-radius:8px;padding:12px;">
           <div style="font-size:10.5px;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Products Enabled</div>
-          <div style="font-size:26px;font-weight:900;color:var(--navy);margin-top:2px;">6</div>
-          <div style="font-size:10.5px;color:var(--gray-600);">NetSuite, ACH, Wire, PosPay, Check, IR</div>
+          <div style="font-size:26px;font-weight:900;color:var(--navy);margin-top:2px;">7</div>
+          <div style="font-size:10.5px;color:var(--gray-600);">NetSuite, ACH, Wire, PosPay, Check, IR, Remittance</div>
         </div>
         <div style="background:var(--gray-50);border-radius:8px;padding:12px;">
           <div style="font-size:10.5px;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Total API Calls</div>
-          <div style="font-size:26px;font-weight:900;color:var(--navy);margin-top:2px;">13</div>
-          <div style="font-size:10.5px;color:var(--gray-600);">Auth + Client + Products + Accts + Review</div>
+          <div style="font-size:26px;font-weight:900;color:var(--navy);margin-top:2px;">14</div>
+          <div style="font-size:10.5px;color:var(--gray-600);">Auth + Client + Products (7) + Accts (6) + Review</div>
         </div>
-        <div style="background:var(--orange-bg);border-radius:8px;padding:12px;border:1px solid #fed7aa;">
-          <div style="font-size:10.5px;color:var(--orange);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Open Questions</div>
-          <div style="font-size:26px;font-weight:900;color:var(--orange);margin-top:2px;">1</div>
-          <div style="font-size:10.5px;color:var(--orange);">ACH Short Name → accountHolderName?</div>
+        <div style="background:var(--green-bg);border-radius:8px;padding:12px;border:1px solid #bbf7d0;">
+          <div style="font-size:10.5px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Open Questions</div>
+          <div style="font-size:26px;font-weight:900;color:var(--green);margin-top:2px;">0</div>
+          <div style="font-size:10.5px;color:var(--green);">All mappings confirmed ✅</div>
         </div>
       </div>
     </div>
@@ -437,67 +437,79 @@ const tData = [
   // ERP / SOFTWARE
   {s:"ERP / Software",f:"ERP Software (NetSuite)",v:"NetSuite ✔",ep:"POST /products",ap:'product: "NETSUITE"',st:"green",n:"Direct product enable call"},
   {s:"ERP / Software",f:"ERP Admin Email",v:"sfoutch@garagedoorsasap.com",ep:"POST /clients",ap:'emails[{type:"ERP_ADMIN"}]',st:"green",n:"1:1 mapping with email type ERP_ADMIN"},
-  {s:"ERP / Software",f:"NetSuite Prod Client ID",v:"12019940",ep:"POST /products",ap:"configs.erpId",st:"green",n:"1:1 direct mapping"},
-  {s:"ERP / Software",f:"NetSuite Sandbox Client ID",v:"12019940",ep:"POST /products",ap:'configs.erpSandboxId (append "_SB1")',st:"yellow",n:'Value + "_SB1" suffix transform → "12019940_SB1"'},
-  {s:"ERP / Software",f:"Reply-To Remittance Email",v:"sfoutch@garagedoorsasap.com",ep:"POST /clients",ap:'emails[{type:"ACCOUNTS_PAYABLE"}]',st:"yellow",n:"Type transform: ACCOUNTS_PAYABLE"},
-  {s:"ERP / Software",f:"FiSpan Approval App",v:"✔ Enabled",ep:"POST /products",ap:"product: APPROVAL_APP",st:"red",n:"⚠️ NOT YET in API — FP-3456 pending; enable manually"},
+  {s:"ERP / Software",f:"Onboarding Manager Email",v:"(bank IM contact email)",ep:"POST /clients",ap:'emails[{type:"BANK_IMPLEMENTATION_MANAGER"}]',st:"green",n:"API v1.1.9 — Bank Implementation Manager receives client setup notifications from FISPAN"},
+  {s:"ERP / Software",f:"NetSuite Prod Client ID",v:"12019940",ep:"POST /products",ap:"configs.erpId",st:"green",n:"Single erpId field — erpProductionId deprecated in API v1.1.7; use erpId for the target environment"},
+  {s:"ERP / Software",f:"NetSuite Sandbox Client ID",v:"12019940_SB1",ep:"POST /products",ap:'configs.erpId (sandbox env, append "_SB1")',st:"yellow",n:'erpSandboxId deprecated (API v1.1.7) — use erpId with "_SB1" suffix when calling sandbox: "12019940_SB1"'},
+  {s:"ERP / Software",f:"Reply-To Remittance Email — Product",v:"sfoutch@garagedoorsasap.com",ep:"POST /products",ap:'product: "FISPAN_REMITTANCE_ADVICE", configs: {sendCopy: true}',st:"yellow",n:"Step 1 of 2: Enable Remittance Advice product so FISPAN sends remittance emails to the reply-to address"},
+  {s:"ERP / Software",f:"Reply-To Remittance Email — Client Record",v:"sfoutch@garagedoorsasap.com",ep:"POST /clients",ap:'emails[{type:"ACCOUNTS_PAYABLE"}]',st:"yellow",n:"Step 2 of 2: Set ACCOUNTS_PAYABLE email on client record — this becomes the reply-to address in remittance emails"},
+  {s:"ERP / Software",f:"FiSpan Payments Approval",v:"✔ Enabled",ep:"POST /products",ap:"product: APPROVAL_APP",st:"red",n:"⚠️ NOT YET in API — pending; enable manually in FISPAN portal"},
   // SERVICES SELECTED
-  {s:"Services Selected",f:"ACH Batch",v:"✔ Enabled",ep:"POST /products",ap:'product: "ACH"',st:"green",n:"achRemittanceEnabled: true in configs"},
-  {s:"Services Selected",f:"Wires",v:"✔ Enabled",ep:"POST /products",ap:'product: "WIRE"',st:"green",n:"configs: null"},
-  {s:"Services Selected",f:"Positive Pay / ARP",v:"✔ Enabled",ep:"POST /products",ap:'product: "POSITIVE_PAY"',st:"green",n:"configs: null"},
-  {s:"Services Selected",f:"Check Outsourcing",v:"✔ Enabled",ep:"POST /products",ap:'product: "CHECK"',st:"green",n:"minCheckNumber, maxCheckNumber required"},
-  {s:"Services Selected",f:"Reporting — Prior Day BAI",v:"✔ Enabled",ep:"POST /products",ap:'product: "INFORMATION_REPORTING"',st:"green",n:"pdrEnabled: true, cdrEnabled: false"},
+  {s:"Services Selected",f:"ACH Batch (File)",v:"✔ Enabled",ep:"POST /products",ap:'product: "ACH", transmissionChannel: "FILE"',st:"green",n:'send_remittance_information: "true" in configs (string); FILE is default for SFTP-based ACH batch'},
+  {s:"Services Selected",f:"ACH Batch (API Pilot)",v:"Approved API Pilot ✔",ep:"POST /products",ap:'product: "ACH", transmissionChannel: "API"',st:"yellow",n:'For clients approved for ACH over API pilot — set transmissionChannel: "API" instead of FILE'},
+  {s:"Services Selected",f:"Wires (File)",v:"✔ Enabled",ep:"POST /products",ap:'product: "WIRE", transmissionChannel: "FILE"',st:"green",n:"No configs required"},
+  {s:"Services Selected",f:"Positive Pay / ARP",v:"✔ Enabled",ep:"POST /products",ap:'product: "POSITIVE_PAY"',st:"green",n:"No configs required"},
+  {s:"Services Selected",f:"Check Outsourcing",v:"✔ Enabled",ep:"POST /products",ap:'product: "CHECK"',st:"green",n:"minimum_check_number and maximum_check_number required (string type)"},
+  {s:"Services Selected",f:"Reporting — Prior Day BAI",v:"✔ Enabled",ep:"POST /products",ap:'product: "INFORMATION_REPORTING", configs: {businessType:"enterprise"}',st:"green",n:"pdrEnabled set per bank account via productConfigs. CDR/PDR both available for IR over API; BAI file is PDR only"},
+  {s:"Services Selected",f:"Remittance Advice Emails",v:"Reply To Address ✔",ep:"POST /products",ap:'product: "FISPAN_REMITTANCE_ADVICE", configs: {sendCopy: true}',st:"green",n:"Enable so FISPAN sends remittance advice emails; sendCopy:true sends a copy to the ACCOUNTS_PAYABLE email"},
   // BANK ACCOUNT 1
   {s:"Bank Account 1 (148620722691)",f:"Account Number",v:"148620722691",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"1:1 mapping"},
   {s:"Bank Account 1 (148620722691)",f:"Account Name",v:"ASAP GARAGE DOOR REPAIR INC",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
+  {s:"Bank Account 1 (148620722691)",f:"ACH Short Name",v:"ASAPGARAGEDOORRE",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"ACH Short Name → accountHolderName; overrides Payer Name in ACH/Wire transmissions (max 32 chars). For PosPay/Check accounts: use Name on Checks value"},
   {s:"Bank Account 1 (148620722691)",f:"Routing Number",v:"041001039",ep:"POST /bank-accounts",ap:"routingNumber",st:"green",n:"1:1 mapping"},
-  {s:"Bank Account 1 (148620722691)",f:"ACH Company ID",v:"1363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Single value applied to both CCD and PPD sender ID keys"},
-  {s:"Bank Account 1 (148620722691)",f:"State (from State/Bank field)",v:"OH",ep:"POST /bank-accounts",ap:"addresses[].stateProvince",st:"yellow",n:"Parse state portion only from 'OH-0101'; used at bank-account level, not client level"},
-  {s:"Bank Account 1 (148620722691)",f:"ACH Enabled ✔",v:"✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["PAYABLES"]',st:"yellow",n:"Transform: PAYABLES → PAYMENT internally"},
-  {s:"Bank Account 1 (148620722691)",f:"Wires Enabled ✔",v:"✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["PAYABLES"]',st:"yellow",n:"Shared PAYABLES product covers wires"},
-  {s:"Bank Account 1 (148620722691)",f:"Positive Pay / Check Enrollment",v:"✔",ep:"POST /bank-accounts",ap:"productConfigs[POSITIVE_PAY, CHECK].enabled: true",st:"green",n:"Set per bank-account payload"},
+  {s:"Bank Account 1 (148620722691)",f:"ACH Company ID (Usage Profile ID)",v:"1363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Usage Profile ID on form = ACH Company ID; single value applied to both CCD and PPD sender ID keys"},
+  {s:"Bank Account 1 (148620722691)",f:"State (from State/Bank field)",v:"OH",ep:"POST /bank-accounts",ap:"address.stateProvince",st:"yellow",n:"Parse state portion only from 'OH-0101'; used at bank-account level, not client level. Usually Ohio for KeyBank"},
+  {s:"Bank Account 1 (148620722691)",f:"ACH Enabled ✔",v:"✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["PAYABLES"]',st:"yellow",n:"PAYABLES entitlement enables ACH and Wire payables for end users on this account"},
+  {s:"Bank Account 1 (148620722691)",f:"Wires Enabled ✔",v:"✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["PAYABLES"]',st:"yellow",n:"Same PAYABLES entitlement covers wires; both ACH and Wire share this enabledProducts value"},
+  {s:"Bank Account 1 (148620722691)",f:"Positive Pay / Check Enrollment",v:"✔",ep:"POST /bank-accounts",ap:"productConfigs[{product:POSITIVE_PAY}, {product:CHECK}]",st:"green",n:"Set per bank-account call; bank account entitlements required for KeyBank going forward"},
   // BANK ACCOUNT 2
   {s:"Bank Account 2 (148626360959)",f:"Account Number",v:"148626360959",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"Affordable Division account"},
   {s:"Bank Account 2 (148626360959)",f:"Account Name",v:"ASAP GDR INC - AFFORDABLE DIVISION",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
-  {s:"Bank Account 2 (148626360959)",f:"ACH Company ID",v:"2363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Unique per account"},
-  {s:"Bank Account 2 (148626360959)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"Transform: IR → BANK_ACCOUNT_INFO internally; pdrEnabled: true"},
+  {s:"Bank Account 2 (148626360959)",f:"ACH Short Name",v:"AFFORDABLEDIVISI",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"ACH Short Name → accountHolderName; override for Payer Name in ACH/Wire transmissions"},
+  {s:"Bank Account 2 (148626360959)",f:"ACH Company ID (Usage Profile ID)",v:"2363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Unique per account"},
+  {s:"Bank Account 2 (148626360959)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"productConfigs[{product:INFORMATION_REPORTING, configs:{pdrEnabled:true, cdrEnabled:false}}]"},
   // BANK ACCOUNT 3
   {s:"Bank Account 3 (148626360967)",f:"Account Number",v:"148626360967",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"Webmarc Doors Division"},
   {s:"Bank Account 3 (148626360967)",f:"Account Name",v:"ASAP GDR INC - WEBMARC DOORS DIVISION",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
-  {s:"Bank Account 3 (148626360967)",f:"ACH Company ID",v:"3363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Unique per account"},
-  {s:"Bank Account 3 (148626360967)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true"},
+  {s:"Bank Account 3 (148626360967)",f:"ACH Short Name",v:"WEBMARCDOORSDIVI",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"ACH Short Name → accountHolderName; override for Payer Name in ACH/Wire transmissions"},
+  {s:"Bank Account 3 (148626360967)",f:"ACH Company ID (Usage Profile ID)",v:"3363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Unique per account"},
+  {s:"Bank Account 3 (148626360967)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"productConfigs[{product:INFORMATION_REPORTING, configs:{pdrEnabled:true, cdrEnabled:false}}]"},
   // BANK ACCOUNT 4
   {s:"Bank Account 4 (148626361106)",f:"Account Number",v:"148626361106",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"Webmarc Wholesale Division"},
   {s:"Bank Account 4 (148626361106)",f:"Account Name",v:"ASAP GDR INC - WEBMARC WHOLESALE DIV",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
-  {s:"Bank Account 4 (148626361106)",f:"ACH Company ID",v:"4363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Unique per account"},
-  {s:"Bank Account 4 (148626361106)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true"},
+  {s:"Bank Account 4 (148626361106)",f:"ACH Short Name",v:"WEBMARCWHOLESALE",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"ACH Short Name → accountHolderName; override for Payer Name in ACH/Wire transmissions"},
+  {s:"Bank Account 4 (148626361106)",f:"ACH Company ID (Usage Profile ID)",v:"4363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"Unique per account"},
+  {s:"Bank Account 4 (148626361106)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"productConfigs[{product:INFORMATION_REPORTING, configs:{pdrEnabled:true, cdrEnabled:false}}]"},
   // BANK ACCOUNT 5
   {s:"Bank Account 5 (148627760447)",f:"Account Number",v:"148627760447",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"Professional Garage Door — ACH only"},
   {s:"Bank Account 5 (148627760447)",f:"Account Name",v:"ASAP GDR INC - PROFESSIONAL GDR S",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
-  {s:"Bank Account 5 (148627760447)",f:"ACH Company ID",v:"5363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"ACH only — no Wires on this account"},
-  {s:"Bank Account 5 (148627760447)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true"},
+  {s:"Bank Account 5 (148627760447)",f:"ACH Short Name",v:"PROFESSIONALGDRS",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"ACH Short Name → accountHolderName; ACH only account — no Wires"},
+  {s:"Bank Account 5 (148627760447)",f:"ACH Company ID (Usage Profile ID)",v:"5363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"ACH only — no Wires on this account; WIRE_SENDER_ID intentionally omitted"},
+  {s:"Bank Account 5 (148627760447)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"productConfigs[{product:INFORMATION_REPORTING, configs:{pdrEnabled:true, cdrEnabled:false}}]"},
   // BANK ACCOUNT 6
   {s:"Bank Account 6 (148620786019)",f:"Account Number",v:"148620786019",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"Credit Card Acct — Wires only"},
   {s:"Bank Account 6 (148620786019)",f:"Account Name",v:"ASAP GDR INC CREDIT CARD ACCT",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
-  {s:"Bank Account 6 (148620786019)",f:"ACH Company ID",v:"N/A — Wires only account",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID]",st:"green",n:"API field exists but not needed — ACH not enabled on this account, so field is intentionally omitted"},
+  {s:"Bank Account 6 (148620786019)",f:"ACH Short Name / Wire Payer Name",v:"ASAPGDRCREDITCARD",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"Wires only account — accountHolderName used as Payer Name override in wire transmissions"},
+  {s:"Bank Account 6 (148620786019)",f:"ACH Company ID",v:"N/A — Wires only account",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID]",st:"green",n:"ACH not enabled — ACH_CCD_SENDER_ID and ACH_PPD_SENDER_ID intentionally omitted; only WIRE_SENDER_ID applies"},
   // POSITIVE PAY / CHECK
-  {s:"Positive Pay / Check",f:"Positive Pay Type",v:"Check Outsourcing ✔",ep:"POST /products",ap:'product: "POSITIVE_PAY" + "CHECK"',st:"green",n:"Two separate product enable calls"},
-  {s:"Positive Pay / Check",f:"Check Outsourcing Enrollment",v:"All applicable accounts ✔",ep:"POST /bank-accounts",ap:"productConfigs[CHECK].enabled: true",st:"green",n:"Set per bank-account call"},
-  {s:"Positive Pay / Check",f:"ARP/PosPay Account Enrollment",v:"All applicable accounts ✔",ep:"POST /bank-accounts",ap:"productConfigs[POSITIVE_PAY].enabled: true",st:"green",n:"Set per bank-account call"},
+  {s:"Positive Pay / Check",f:"Positive Pay Type",v:"Check Outsourcing ✔",ep:"POST /products",ap:'product: "POSITIVE_PAY" + product: "CHECK"',st:"green",n:"Two separate product enable calls; no configs required at the product level"},
+  {s:"Positive Pay / Check",f:"Name on Checks",v:"(from form)",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"Name on Checks → accountHolderName for accounts where PosPay/Check Outsourcing is the primary product (no ACH/Wire)"},
+  {s:"Positive Pay / Check",f:"Check Outsourcing Enrollment",v:"All applicable accounts ✔",ep:"POST /bank-accounts",ap:"productConfigs[{product:CHECK}]",st:"green",n:"Set per bank-account call; bank account entitlements required for KeyBank going forward"},
+  {s:"Positive Pay / Check",f:"ARP/PosPay Account Enrollment",v:"All applicable accounts ✔",ep:"POST /bank-accounts",ap:"productConfigs[{product:POSITIVE_PAY}]",st:"green",n:"Set per bank-account call; bank account entitlements required for KeyBank going forward"},
   // INFORMATION REPORTING
   {s:"Information Reporting",f:"KeyNav Common Services App ID",v:"100013206",ep:"POST /clients",ap:"externalId",st:"green",n:"KeyNavigator App ID is passed as the client's externalId field — 1:1 mapping"},
-  {s:"Information Reporting",f:"BAI Reporting — Account 2",v:"148626360959 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"Transform: IR → BANK_ACCOUNT_INFO internally"},
-  {s:"Information Reporting",f:"BAI Reporting — Account 3",v:"148626360967 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true"},
-  {s:"Information Reporting",f:"BAI Reporting — Account 4",v:"148626361106 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true"},
-  {s:"Information Reporting",f:"BAI Reporting — Account 5",v:"148627760447 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true"},
+  {s:"Information Reporting",f:"BAI Reporting — Account 2",v:"148626360959 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"productConfigs[{product:INFORMATION_REPORTING, configs:{pdrEnabled:true, cdrEnabled:false}}]; CDR available for IR over API"},
+  {s:"Information Reporting",f:"BAI Reporting — Account 3",v:"148626360967 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true per productConfigs"},
+  {s:"Information Reporting",f:"BAI Reporting — Account 4",v:"148626361106 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true per productConfigs"},
+  {s:"Information Reporting",f:"BAI Reporting — Account 5",v:"148627760447 ✔",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"pdrEnabled: true per productConfigs"},
   // API ONLY
-  {s:"API Only Fields",f:"clientType",v:"—",ep:"POST /clients",ap:'clientType: "ERP_PLUGIN"',st:"blue",n:"Always ERP_PLUGIN; can hardcode"},
-  {s:"API Only Fields",f:"country",v:"—",ep:"POST /bank-accounts",ap:'addresses[].country: "US"',st:"blue",n:"Always US; can hardcode"},
+  {s:"API Only Fields",f:"clientType",v:"—",ep:"POST /clients",ap:'clientType: "ERP_PLUGIN"',st:"blue",n:"Always ERP_PLUGIN for NetSuite/Intacct/BC365; can hardcode"},
+  {s:"API Only Fields",f:"bankName",v:"—",ep:"POST /bank-accounts",ap:'bankName: "KeyBank"',st:"blue",n:"Always KeyBank; can hardcode"},
+  {s:"API Only Fields",f:"country",v:"—",ep:"POST /bank-accounts",ap:'address.country: "US"',st:"blue",n:"Always US for KeyBank domestic accounts; can hardcode"},
   {s:"API Only Fields",f:"currencyCode",v:"—",ep:"POST /bank-accounts",ap:'currencyCode: "USD"',st:"blue",n:"Always USD; can hardcode"},
   {s:"API Only Fields",f:"accountType",v:"—",ep:"POST /bank-accounts",ap:'accountType: "CHECKING"',st:"blue",n:"Not on form; must collect or default to CHECKING"},
-  {s:"API Only Fields",f:"Idempotency-Key (header)",v:"—",ep:"All POST requests",ap:"Header: Idempotency-Key: {uuid}",st:"blue",n:"Auto-generate UUID v4 per request"},
-  {s:"API Only Fields",f:"brandingGroup",v:"—",ep:"POST /clients",ap:'brandingGroup: "keybank-erp-plugin"',st:"blue",n:"KeyBank-specific; define per bank instance"},
-  {s:"API Only Fields",f:"transmissionChannel",v:"—",ep:"POST /products",ap:'transmissionChannel: "FILE" | "API"',st:"blue",n:'FILE for ACH/Wire file-based; not on form'},
+  {s:"API Only Fields",f:"Idempotency-Key (header)",v:"—",ep:"All POST requests",ap:"Header: Idempotency-Key: {uuid}",st:"blue",n:"Auto-generate UUID v4 per POST request; no Idempotency-Key required for /review endpoint"},
+  {s:"API Only Fields",f:"brandingGroup",v:"—",ep:"POST /clients",ap:'brandingGroup: "keybank-erp-plugin"',st:"blue",n:"API v1.1.8 — KeyBank-specific branding key; define once per bank instance"},
+  {s:"API Only Fields",f:"transmissionChannel",v:"—",ep:"POST /products",ap:'transmissionChannel: "FILE" | "API"',st:"blue",n:'FILE for SFTP-based ACH/Wire batch (default); API for pilot clients with direct API payment submission'},
 ];
 
 // ==================== COMPUTED COUNTS ====================
@@ -619,57 +631,61 @@ const seqSteps = [
           <span class="chip">brandingGroup: "keybank-erp-plugin"</span>
           <span class="chip">emails[ERP_ADMIN]: sfoutch@garagedoorsasap.com</span>
           <span class="chip">emails[ACCOUNTS_PAYABLE]: sfoutch@garagedoorsasap.com</span>
+          <span class="chip" style="border-color:#0066cc;color:#0066cc">emails[BANK_IMPLEMENTATION_MANAGER]: (bank IM email) <em>new API v1.1.9</em></span>
         </div>
         <div class="irow" style="margin-top:10px"><span class="ilbl">Output</span><span class="ival" style="color:var(--green);font-weight:700">clientId (GUID) — used in all subsequent calls</span></div>
       </div>
     </div>`},
-  {n:3,icon:"⚙️",title:"Enable Products (6 calls)",sub:"POST /api/partner-tools/v1/clients/{clientId}/products × 6",open:false,content:`
+  {n:3,icon:"⚙️",title:"Enable Products (7 calls)",sub:"POST /api/partner-tools/v1/clients/{clientId}/products × 7",open:false,content:`
     <div class="sub-steps">
       ${[
-        {id:"3a",p:"NETSUITE",cfg:'erpId: "12019940", erpSandboxId: "12019940_SB1"'},
-        {id:"3b",p:"ACH",cfg:'achRemittanceEnabled: true, transmissionChannel: "FILE"'},
-        {id:"3c",p:"WIRE",cfg:"configs: null"},
-        {id:"3d",p:"POSITIVE_PAY",cfg:"configs: null"},
-        {id:"3e",p:"CHECK",cfg:'minCheckNumber: "100000", maxCheckNumber: "199999", checkDeliveryMethod: "UM"'},
-        {id:"3f",p:"INFORMATION_REPORTING",cfg:"pdrEnabled: true, cdrEnabled: false"},
+        {id:"3a",p:"NETSUITE",cfg:'configs: { erpId: "12019940" }  ← production env; for sandbox use erpId: "12019940_SB1"'},
+        {id:"3b",p:"ACH",cfg:'transmissionChannel: "FILE", configs: { send_remittance_information: "true" }'},
+        {id:"3c",p:"WIRE",cfg:'transmissionChannel: "FILE"  (no configs required)'},
+        {id:"3d",p:"POSITIVE_PAY",cfg:"(no configs required)"},
+        {id:"3e",p:"CHECK",cfg:'configs: { minimum_check_number: "100000", maximum_check_number: "199999" }'},
+        {id:"3f",p:"INFORMATION_REPORTING",cfg:'configs: { businessType: "enterprise" }  — pdrEnabled set per bank account via productConfigs'},
+        {id:"3g",p:"FISPAN_REMITTANCE_ADVICE",cfg:'configs: { sendCopy: true }  — enables remittance email to ACCOUNTS_PAYABLE address  <em style="color:#0066cc">new</em>'},
       ].map(s => `<div class="sub-step">
         <div class="sub-step-title">Call ${s.id} — <span class="mono">${s.p}</span></div>
-        <div class="irow"><span class="ilbl">configs</span><span class="ival" style="font-family:monospace;font-size:11.5px">${s.cfg}</span></div>
+        <div class="irow"><span class="ilbl">payload</span><span class="ival" style="font-family:monospace;font-size:11.5px">${s.cfg}</span></div>
       </div>`).join('')}
       <div class="sub-step" style="border-color:#fca5a5;background:#fff5f5">
-        <div class="sub-step-title" style="color:var(--red)">⚠️ APPROVAL_APP — Not yet available via API</div>
-        <div class="irow"><span class="ilbl">Status</span><span class="ival" style="color:var(--red)">FP-3456 pending — must be enabled manually in portal</span></div>
+        <div class="sub-step-title" style="color:var(--red)">⚠️ APPROVAL_APP (FiSpan Payments Approval) — Not yet available via API</div>
+        <div class="irow"><span class="ilbl">Status</span><span class="ival" style="color:var(--red)">Must be enabled manually in FISPAN portal</span></div>
       </div>
     </div>`},
   {n:4,icon:"🏦",title:"Add Bank Accounts (6 calls)",sub:"POST /api/partner-tools/v1/clients/{clientId}/bank-accounts × 6",open:false,content:`
     <div class="sub-steps">
       ${[
-        {id:"4a",acct:"148620722691",label:"ASAP GARAGE DOOR REPAIR INC",ach:"1363903427",pay:true,ir:false,wiresNo:false,wireOnly:false},
-        {id:"4b",acct:"148626360959",label:"ASAP GDR - AFFORDABLE DIVISION",ach:"2363903427",pay:true,ir:true,wiresNo:false,wireOnly:false},
-        {id:"4c",acct:"148626360967",label:"ASAP GDR - WEBMARC DOORS DIVISION",ach:"3363903427",pay:true,ir:true,wiresNo:false,wireOnly:false},
-        {id:"4d",acct:"148626361106",label:"ASAP GDR - WEBMARC WHOLESALE DIV",ach:"4363903427",pay:true,ir:true,wiresNo:false,wireOnly:false},
-        {id:"4e",acct:"148627760447",label:"ASAP GDR - PROFESSIONAL GDR S",ach:"5363903427",pay:true,ir:true,wiresNo:true,wireOnly:false},
-        {id:"4f",acct:"148620786019",label:"ASAP GDR CREDIT CARD ACCT",ach:null,pay:true,ir:false,wiresNo:false,wireOnly:true},
+        {id:"4a",acct:"148620722691",label:"ASAP GARAGE DOOR REPAIR INC",ahn:"ASAPGARAGEDOORRE",ach:"1363903427",pay:true,ir:false,wiresNo:false,wireOnly:false},
+        {id:"4b",acct:"148626360959",label:"ASAP GDR - AFFORDABLE DIVISION",ahn:"AFFORDABLEDIVISI",ach:"2363903427",pay:true,ir:true,wiresNo:false,wireOnly:false},
+        {id:"4c",acct:"148626360967",label:"ASAP GDR - WEBMARC DOORS DIVISION",ahn:"WEBMARCDOORSDIVI",ach:"3363903427",pay:true,ir:true,wiresNo:false,wireOnly:false},
+        {id:"4d",acct:"148626361106",label:"ASAP GDR - WEBMARC WHOLESALE DIV",ahn:"WEBMARCWHOLESALE",ach:"4363903427",pay:true,ir:true,wiresNo:false,wireOnly:false},
+        {id:"4e",acct:"148627760447",label:"ASAP GDR - PROFESSIONAL GDR S",ahn:"PROFESSIONALGDRS",ach:"5363903427",pay:true,ir:true,wiresNo:true,wireOnly:false},
+        {id:"4f",acct:"148620786019",label:"ASAP GDR CREDIT CARD ACCT",ahn:"ASAPGDRCREDITCARD",ach:null,pay:true,ir:false,wiresNo:false,wireOnly:true},
       ].map(s => `<div class="sub-step">
         <div class="sub-step-title">Call ${s.id} — Account <span class="mono">${s.acct}</span>${s.wiresNo ? ' <span style="color:#d97706;font-size:10px;font-weight:600;margin-left:4px;">ACH only</span>' : ''}${s.wireOnly ? ' <span style="color:#0066cc;font-size:10px;font-weight:600;margin-left:4px;">Wires only</span>' : ''}</div>
         <div class="chips">
           <span class="chip">accountNumber: ${s.acct}</span>
           <span class="chip">routingNumber: 041001039</span>
           <span class="chip">accountLabel: ${s.label}</span>
+          <span class="chip" style="border-color:#0a2342;color:#0a2342">accountHolderName: ${s.ahn}</span>
           ${s.ach ? `<span class="chip">ACH_CCD_SENDER_ID: ${s.ach}</span>` : ''}
           ${s.ach ? `<span class="chip">ACH_PPD_SENDER_ID: ${s.ach}</span>` : ''}
+          <span class="chip">bankName: KeyBank</span>
           <span class="chip">accountType: CHECKING</span>
           <span class="chip">currencyCode: USD</span>
           <span class="chip">stateProvince: OH</span>
           ${s.pay ? '<span class="chip" style="border-color:#16a34a;color:#16a34a">enabledProducts: PAYABLES</span>' : ''}
           ${s.ir ? '<span class="chip" style="border-color:#1d4ed8;color:#1d4ed8">enabledProducts: INFORMATION_REPORTING</span>' : ''}
-          <span class="chip">productConfigs: POSITIVE_PAY ✔ CHECK ✔</span>
+          <span class="chip">productConfigs: POSITIVE_PAY ✔ CHECK ✔${s.ir ? ' IR (pdrEnabled:true) ✔' : ''}</span>
         </div>
-        ${s.ach === null ? '<div style="margin-top:7px;font-size:11px;color:#d97706">⚠️ No ACH_CCD/PPD_SENDER_ID — Wires only account; ACH_CCD_SENDER_ID intentionally omitted</div>' : ''}
+        ${s.ach === null ? '<div style="margin-top:7px;font-size:11px;color:#0066cc">ℹ️ Wires only — ACH_CCD/PPD_SENDER_ID intentionally omitted; WIRE_SENDER_ID applies</div>' : ''}
       </div>`).join('')}
-      <div class="sub-step" style="border-color:#fed7aa;background:#fffbf5">
-        <div class="sub-step-title" style="color:var(--orange)">⚠️ Open Question: accountHolderName</div>
-        <div class="irow"><span class="ilbl">Status</span><span class="ival" style="color:var(--orange)">ACH Short Name → accountHolderName mapping is UNCONFIRMED. Field omitted from all payloads pending confirmation with FISPAN partner engineering.</span></div>
+      <div class="sub-step" style="border-color:#bbf7d0;background:#f0fdf4">
+        <div class="sub-step-title" style="color:var(--green)">✅ accountHolderName — Confirmed Mapping</div>
+        <div class="irow"><span class="ilbl">Source</span><span class="ival" style="color:var(--green)">ACH/Wire accounts → ACH Short Name field on form. PosPay/Check primary accounts → Name on Checks. All payloads now include accountHolderName.</span></div>
       </div>
     </div>`},
   {n:5,icon:"✅",title:"Mark Client as Reviewed — Finalize",sub:"POST /api/partner-tools/v1/clients/{clientId}/review · No body",open:false,content:`
@@ -843,218 +859,244 @@ const payloads = [
     {
       "email": "sfoutch@garagedoorsasap.com",
       "name": "Stephen Foutch",
-      "types": ["ERP_ADMIN"]
+      "type": "ERP_ADMIN"
     },
     {
       "email": "sfoutch@garagedoorsasap.com",
       "name": "Stephen Foutch",
-      "types": ["ACCOUNTS_PAYABLE"]
+      "type": "ACCOUNTS_PAYABLE"
+    },
+    {
+      "email": "bank-im@keybank.com",
+      "name": "KeyBank Implementation Manager",
+      "type": "BANK_IMPLEMENTATION_MANAGER"
     }
-  ],
-  "demoOnboardingDetails": {
-    "erpSandboxId": "12019940_SB1",
-    "erpProductionId": "12019940"
-  }
-}`},
+  ]
+}
+// Note: ERP IDs (erpId) are set via POST /products when enabling the ERP product (Step 3a).
+// demoOnboardingDetails / erpProductionId / erpSandboxId are deprecated as of API v1.1.7.`},
   {title:"Step 3a — Enable NETSUITE Product",icon:"⚙️",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/products
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
 {
   "product": "NETSUITE",
-  "transmissionChannel": "API",
   "configs": {
-    "erpId": "12019940",
-    "erpSandboxId": "12019940_SB1",
-    "send_remittance_information": "true"
+    "erpId": "12019940"
   }
-}`},
+}
+// For sandbox environment calls, use: "erpId": "12019940_SB1"
+// Note: erpSandboxId and erpProductionId are deprecated as of API v1.1.7; use erpId only.`},
   {title:"Step 3b — Enable ACH Product",icon:"⚙️",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/products
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
 {
   "product": "ACH",
   "transmissionChannel": "FILE",
   "configs": {
-    "achRemittanceEnabled": "true",
-    "ach_transaction_type": "CREDIT"
+    "send_remittance_information": "true"
   }
-}`},
+}
+// For ACH over API pilot clients, set: "transmissionChannel": "API"
+// Note: achRemittanceEnabled renamed to send_remittance_information (string) in API v1.1.3.`},
   {title:"Step 3c — Enable WIRE Product",icon:"⚙️",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/products
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
 {
   "product": "WIRE",
-  "transmissionChannel": "FILE",
-  "configs": null
-}`},
+  "transmissionChannel": "FILE"
+}
+// configs is optional; omit for WIRE (no configs supported).`},
   {title:"Step 3d — Enable POSITIVE_PAY Product",icon:"⚙️",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/products
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
 {
-  "product": "POSITIVE_PAY",
-  "configs": null
-}`},
+  "product": "POSITIVE_PAY"
+}
+// configs is optional; omit for POSITIVE_PAY (no configs supported at client level).
+// Account-level enrollment is set via productConfigs in each POST /bank-accounts call.`},
   {title:"Step 3e — Enable CHECK Product",icon:"⚙️",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/products
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
 {
   "product": "CHECK",
   "configs": {
-    "minCheckNumber": "100000",
-    "maxCheckNumber": "199999",
-    "checkDeliveryMethod": "UM"
+    "minimum_check_number": "100000",
+    "maximum_check_number": "199999"
   }
-}`},
+}
+// Note: config keys use snake_case at the product level (minimum_check_number).
+// At the bank-account level productConfigs they are camelCase (minCheckNumber / maxCheckNumber).
+// Account-level enrollment is set via productConfigs in each POST /bank-accounts call.`},
   {title:"Step 3f — Enable INFORMATION_REPORTING Product",icon:"⚙️",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/products
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
 {
   "product": "INFORMATION_REPORTING",
   "configs": {
-    "pdrEnabled": "true",
-    "cdrEnabled": "false"
+    "businessType": "enterprise"
   }
-}`},
+}
+// pdrEnabled / cdrEnabled are set per bank account via productConfigs in POST /bank-accounts.
+// BAI file reporting supports PDR only. CDR and PDR are both available for IR over API.`},
+  {title:"Step 3g — Enable FISPAN_REMITTANCE_ADVICE Product",icon:"📧",lang:"json",code:
+`// POST /api/partner-tools/v1/clients/{clientId}/products
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
+{
+  "product": "FISPAN_REMITTANCE_ADVICE",
+  "configs": {
+    "sendCopy": true
+  }
+}
+// sendCopy: true sends a copy of remittance advice emails to the ACCOUNTS_PAYABLE email
+// set on the client record. Maps to "Reply To Address for Emailed Remittance" on the form.`},
   {title:"Step 4a — Add Bank Account #1 (148620722691 — Primary)",icon:"🏦",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/bank-accounts
-// Headers: Authorization: Bearer {token}
-//          Idempotency-Key: {unique-uuid-per-call}
-// NOTE: accountHolderName (ACH Short Name) OMITTED — mapping unconfirmed
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {unique-uuid-per-call}
 
 {
   "accountNumber": "148620722691",
   "routingNumber": "041001039",
   "accountLabel": "ASAP GARAGE DOOR REPAIR INC",
+  "accountHolderName": "ASAPGARAGEDOORRE",
+  "bankName": "KeyBank",
   "accountType": "CHECKING",
   "currencyCode": "USD",
-  "bankExternalId": "148620722691",
   "defaultAccount": true,
-  "addresses": [
-    { "stateProvince": "OH", "country": "US" }
-  ],
+  "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "1363903427" },
     { "key": "ACH_PPD_SENDER_ID", "value": "1363903427" },
     { "key": "WIRE_SENDER_ID",    "value": "1363903427" }
   ],
   "enabledProducts": ["PAYABLES"],
-  "productConfigs": {
-    "POSITIVE_PAY": { "enabled": true },
-    "CHECK": {
-      "enabled": true,
-      "minCheckNumber": "100000",
-      "maxCheckNumber": "199999"
-    }
-  }
+  "productConfigs": [
+    { "product": "POSITIVE_PAY" },
+    { "product": "CHECK", "configs": { "minCheckNumber": 100000, "maxCheckNumber": 199999 } }
+  ]
 }`},
   {title:"Step 4b — Add Bank Account #2 (148626360959 — Affordable Division)",icon:"🏦",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/bank-accounts
-// NOTE: accountHolderName (ACH Short Name) OMITTED — mapping unconfirmed
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {unique-uuid-per-call}
 
 {
   "accountNumber": "148626360959",
   "routingNumber": "041001039",
   "accountLabel": "ASAP GARAGE DOOR REPAIR INC - AFFORDABLE DIVISION",
+  "accountHolderName": "AFFORDABLEDIVISI",
+  "bankName": "KeyBank",
   "accountType": "CHECKING",
   "currencyCode": "USD",
-  "addresses": [{ "stateProvince": "OH", "country": "US" }],
+  "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "2363903427" },
     { "key": "ACH_PPD_SENDER_ID", "value": "2363903427" },
     { "key": "WIRE_SENDER_ID",    "value": "2363903427" }
   ],
   "enabledProducts": ["PAYABLES", "INFORMATION_REPORTING"],
-  "productConfigs": {
-    "POSITIVE_PAY": { "enabled": true },
-    "CHECK": { "enabled": true },
-    "INFORMATION_REPORTING": { "pdrEnabled": true, "cdrEnabled": false }
-  }
+  "productConfigs": [
+    { "product": "POSITIVE_PAY" },
+    { "product": "CHECK" },
+    { "product": "INFORMATION_REPORTING", "configs": { "pdrEnabled": true, "cdrEnabled": false } }
+  ]
 }`},
   {title:"Step 4c — Add Bank Account #3 (148626360967 — Webmarc Doors)",icon:"🏦",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/bank-accounts
-// NOTE: accountHolderName (ACH Short Name) OMITTED — mapping unconfirmed
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {unique-uuid-per-call}
 
 {
   "accountNumber": "148626360967",
   "routingNumber": "041001039",
   "accountLabel": "ASAP GARAGE DOOR REPAIR INC - WEBMARC DOORS DIVISION",
+  "accountHolderName": "WEBMARCDOORSDIVI",
+  "bankName": "KeyBank",
   "accountType": "CHECKING",
   "currencyCode": "USD",
-  "addresses": [{ "stateProvince": "OH", "country": "US" }],
+  "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "3363903427" },
     { "key": "ACH_PPD_SENDER_ID", "value": "3363903427" },
     { "key": "WIRE_SENDER_ID",    "value": "3363903427" }
   ],
   "enabledProducts": ["PAYABLES", "INFORMATION_REPORTING"],
-  "productConfigs": {
-    "POSITIVE_PAY": { "enabled": true },
-    "CHECK": { "enabled": true },
-    "INFORMATION_REPORTING": { "pdrEnabled": true, "cdrEnabled": false }
-  }
+  "productConfigs": [
+    { "product": "POSITIVE_PAY" },
+    { "product": "CHECK" },
+    { "product": "INFORMATION_REPORTING", "configs": { "pdrEnabled": true, "cdrEnabled": false } }
+  ]
 }`},
   {title:"Step 4d — Add Bank Account #4 (148626361106 — Webmarc Wholesale)",icon:"🏦",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/bank-accounts
-// NOTE: accountHolderName (ACH Short Name) OMITTED — mapping unconfirmed
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {unique-uuid-per-call}
 
 {
   "accountNumber": "148626361106",
   "routingNumber": "041001039",
   "accountLabel": "ASAP GARAGE DOOR REPAIR INC - WEBMARC WHOLESALE DIVISION",
+  "accountHolderName": "WEBMARCWHOLESALE",
+  "bankName": "KeyBank",
   "accountType": "CHECKING",
   "currencyCode": "USD",
-  "addresses": [{ "stateProvince": "OH", "country": "US" }],
+  "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "4363903427" },
     { "key": "ACH_PPD_SENDER_ID", "value": "4363903427" },
     { "key": "WIRE_SENDER_ID",    "value": "4363903427" }
   ],
   "enabledProducts": ["PAYABLES", "INFORMATION_REPORTING"],
-  "productConfigs": {
-    "POSITIVE_PAY": { "enabled": true },
-    "CHECK": { "enabled": true },
-    "INFORMATION_REPORTING": { "pdrEnabled": true, "cdrEnabled": false }
-  }
+  "productConfigs": [
+    { "product": "POSITIVE_PAY" },
+    { "product": "CHECK" },
+    { "product": "INFORMATION_REPORTING", "configs": { "pdrEnabled": true, "cdrEnabled": false } }
+  ]
 }`},
   {title:"Step 4e — Add Bank Account #5 (148627760447 — Professional GDR, ACH only)",icon:"🏦",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/bank-accounts
-// Note: ACH only — no Wires on this account (no WIRE_SENDER_ID)
-// NOTE: accountHolderName (ACH Short Name) OMITTED — mapping unconfirmed
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {unique-uuid-per-call}
+// Note: ACH only — Wires not enabled on this account; WIRE_SENDER_ID intentionally omitted.
 
 {
   "accountNumber": "148627760447",
   "routingNumber": "041001039",
   "accountLabel": "ASAP GARAGE DOOR REPAIR INC - PROFESSIONAL GARAGE DOOR S",
+  "accountHolderName": "PROFESSIONALGDRS",
+  "bankName": "KeyBank",
   "accountType": "CHECKING",
   "currencyCode": "USD",
-  "addresses": [{ "stateProvince": "OH", "country": "US" }],
+  "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "5363903427" },
     { "key": "ACH_PPD_SENDER_ID", "value": "5363903427" }
   ],
   "enabledProducts": ["PAYABLES", "INFORMATION_REPORTING"],
-  "productConfigs": {
-    "POSITIVE_PAY": { "enabled": true },
-    "CHECK": { "enabled": true },
-    "INFORMATION_REPORTING": { "pdrEnabled": true, "cdrEnabled": false }
-  }
+  "productConfigs": [
+    { "product": "POSITIVE_PAY" },
+    { "product": "CHECK" },
+    { "product": "INFORMATION_REPORTING", "configs": { "pdrEnabled": true, "cdrEnabled": false } }
+  ]
 }`},
   {title:"Step 4f — Add Bank Account #6 (148620786019 — Credit Card / Wires only)",icon:"🏦",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/bank-accounts
+// Headers: Authorization: Bearer {token} | Idempotency-Key: {unique-uuid-per-call}
 // Note: Wires ONLY — ACH not enabled on this account.
-//       ACH_CCD_SENDER_ID / ACH_PPD_SENDER_ID intentionally omitted
-//       (API field exists but is not applicable here).
-// NOTE: accountHolderName (ACH Short Name) OMITTED — mapping unconfirmed
+//       ACH_CCD_SENDER_ID / ACH_PPD_SENDER_ID intentionally omitted (API field exists but not applicable).
 
 {
   "accountNumber": "148620786019",
   "routingNumber": "041001039",
   "accountLabel": "ASAP GARAGE DOOR REPAIR INC CREDIT CARD ACCT",
+  "accountHolderName": "ASAPGDRCREDITCARD",
+  "bankName": "KeyBank",
   "accountType": "CHECKING",
   "currencyCode": "USD",
-  "addresses": [{ "stateProvince": "OH", "country": "US" }],
+  "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "WIRE_SENDER_ID", "value": "1363903427" }
   ],
   "enabledProducts": ["PAYABLES"],
-  "productConfigs": {
-    "POSITIVE_PAY": { "enabled": true },
-    "CHECK": { "enabled": true }
-  }
+  "productConfigs": [
+    { "product": "POSITIVE_PAY" },
+    { "product": "CHECK" }
+  ]
 }`},
   {title:"Step 5 — Mark Client as Reviewed (Finalize Onboarding)",icon:"✅",lang:"bash",code:
 `# POST /api/partner-tools/v1/clients/{clientId}/review
