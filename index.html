@@ -446,6 +446,7 @@ const tData = [
   // SERVICES SELECTED
   {s:"Services Selected",f:"ACH Batch (File)",v:"✔ Enabled",ep:"POST /products",ap:'product: "ACH", transmissionChannel: "FILE"',st:"green",n:'send_remittance_information: "true" in configs (string); FILE is default for SFTP-based ACH batch'},
   {s:"Services Selected",f:"ACH Batch (API Pilot)",v:"Approved API Pilot ✔",ep:"POST /products",ap:'product: "ACH", transmissionChannel: "API"',st:"yellow",n:'For clients approved for ACH over API pilot — set transmissionChannel: "API" instead of FILE'},
+  {s:"Services Selected",f:"Extra Details — ACH CA (API mode only)",v:"APPLICATION_ID",ep:"POST /bank-accounts",ap:'extraDetails[{key:"ACH_CA", value:"APPLICATION_ID"}]',st:"yellow",n:"Confluence: 'Extra Details Key: ACH CA, Value: APPLICATION_ID' — only required for ACH over API pilot accounts; not needed for FILE-based ACH"},
   {s:"Services Selected",f:"Wires (File)",v:"✔ Enabled",ep:"POST /products",ap:'product: "WIRE", transmissionChannel: "FILE"',st:"green",n:"No configs required"},
   {s:"Services Selected",f:"Positive Pay / ARP",v:"✔ Enabled",ep:"POST /products",ap:'product: "POSITIVE_PAY"',st:"green",n:"No configs required"},
   {s:"Services Selected",f:"Check Outsourcing",v:"✔ Enabled",ep:"POST /products",ap:'product: "CHECK"',st:"green",n:"minimum_check_number and maximum_check_number required (string type)"},
@@ -483,13 +484,13 @@ const tData = [
   {s:"Bank Account 5 (148627760447)",f:"Account Number",v:"148627760447",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"Professional Garage Door — ACH only"},
   {s:"Bank Account 5 (148627760447)",f:"Account Name",v:"ASAP GDR INC - PROFESSIONAL GDR S",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
   {s:"Bank Account 5 (148627760447)",f:"ACH Short Name",v:"PROFESSIONALGDRS",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"ACH Short Name → accountHolderName; ACH only account — no Wires"},
-  {s:"Bank Account 5 (148627760447)",f:"ACH Company ID (Usage Profile ID)",v:"5363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"ACH only — no Wires on this account; WIRE_SENDER_ID intentionally omitted"},
+  {s:"Bank Account 5 (148627760447)",f:"ACH Company ID (Usage Profile ID)",v:"5363903427",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID, ACH_PPD_SENDER_ID]",st:"yellow",n:"ACH only — no Wires on this account"},
   {s:"Bank Account 5 (148627760447)",f:"BAI Reporting (Prior Day)",v:"✔ Enabled",ep:"POST /bank-accounts",ap:'enabledProducts: ["INFORMATION_REPORTING"]',st:"yellow",n:"productConfigs[{product:INFORMATION_REPORTING, configs:{pdrEnabled:true, cdrEnabled:false}}]"},
   // BANK ACCOUNT 6
   {s:"Bank Account 6 (148620786019)",f:"Account Number",v:"148620786019",ep:"POST /bank-accounts",ap:"accountNumber",st:"green",n:"Credit Card Acct — Wires only"},
   {s:"Bank Account 6 (148620786019)",f:"Account Name",v:"ASAP GDR INC CREDIT CARD ACCT",ep:"POST /bank-accounts",ap:"accountLabel",st:"green",n:"1:1 mapping"},
   {s:"Bank Account 6 (148620786019)",f:"ACH Short Name / Wire Payer Name",v:"ASAPGDRCREDITCARD",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"Wires only account — accountHolderName used as Payer Name override in wire transmissions"},
-  {s:"Bank Account 6 (148620786019)",f:"ACH Company ID",v:"N/A — Wires only account",ep:"POST /bank-accounts",ap:"extraDetails[ACH_CCD_SENDER_ID]",st:"green",n:"ACH not enabled — ACH_CCD_SENDER_ID and ACH_PPD_SENDER_ID intentionally omitted; only WIRE_SENDER_ID applies"},
+  {s:"Bank Account 6 (148620786019)",f:"ACH Company ID",v:"N/A — Wires only account",ep:"POST /bank-accounts",ap:"extraDetails",st:"green",n:"ACH not enabled — ACH Company ID / extraDetails not applicable for this account; no ACH_CCD_SENDER_ID or ACH_PPD_SENDER_ID needed"},
   // POSITIVE PAY / CHECK
   {s:"Positive Pay / Check",f:"Positive Pay Type",v:"Check Outsourcing ✔",ep:"POST /products",ap:'product: "POSITIVE_PAY" + product: "CHECK"',st:"green",n:"Two separate product enable calls; no configs required at the product level"},
   {s:"Positive Pay / Check",f:"Name on Checks",v:"(from form)",ep:"POST /bank-accounts",ap:"accountHolderName",st:"green",n:"Name on Checks → accountHolderName for accounts where PosPay/Check Outsourcing is the primary product (no ACH/Wire)"},
@@ -681,7 +682,7 @@ const seqSteps = [
           ${s.ir ? '<span class="chip" style="border-color:#1d4ed8;color:#1d4ed8">enabledProducts: INFORMATION_REPORTING</span>' : ''}
           <span class="chip">productConfigs: POSITIVE_PAY ✔ CHECK ✔${s.ir ? ' IR (pdrEnabled:true) ✔' : ''}</span>
         </div>
-        ${s.ach === null ? '<div style="margin-top:7px;font-size:11px;color:#0066cc">ℹ️ Wires only — ACH_CCD/PPD_SENDER_ID intentionally omitted; WIRE_SENDER_ID applies</div>' : ''}
+        ${s.ach === null ? '<div style="margin-top:7px;font-size:11px;color:#0066cc">ℹ️ Wires only account — ACH_CCD/PPD_SENDER_ID not applicable; no ACH Company ID on this account</div>' : ''}
       </div>`).join('')}
       <div class="sub-step" style="border-color:#bbf7d0;background:#f0fdf4">
         <div class="sub-step-title" style="color:var(--green)">✅ accountHolderName — Confirmed Mapping</div>
@@ -897,7 +898,11 @@ const payloads = [
   }
 }
 // For ACH over API pilot clients, set: "transmissionChannel": "API"
-// Note: achRemittanceEnabled renamed to send_remittance_information (string) in API v1.1.3.`},
+// Note: achRemittanceEnabled renamed to send_remittance_information (string) in API v1.1.3.
+//
+// For API-mode ACH accounts, also add this extraDetail to the bank-account payload:
+//   { "key": "ACH_CA", "value": "APPLICATION_ID" }
+// (KeyBank Onboarding Form Guide — Extra Details section; API pilot only, not for FILE-based ACH)`},
   {title:"Step 3c — Enable WIRE Product",icon:"⚙️",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/products
 // Headers: Authorization: Bearer {token} | Idempotency-Key: {uuid}
@@ -965,8 +970,7 @@ const payloads = [
   "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "1363903427" },
-    { "key": "ACH_PPD_SENDER_ID", "value": "1363903427" },
-    { "key": "WIRE_SENDER_ID",    "value": "1363903427" }
+    { "key": "ACH_PPD_SENDER_ID", "value": "1363903427" }
   ],
   "enabledProducts": ["PAYABLES"],
   "productConfigs": [
@@ -989,8 +993,7 @@ const payloads = [
   "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "2363903427" },
-    { "key": "ACH_PPD_SENDER_ID", "value": "2363903427" },
-    { "key": "WIRE_SENDER_ID",    "value": "2363903427" }
+    { "key": "ACH_PPD_SENDER_ID", "value": "2363903427" }
   ],
   "enabledProducts": ["PAYABLES", "INFORMATION_REPORTING"],
   "productConfigs": [
@@ -1014,8 +1017,7 @@ const payloads = [
   "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "3363903427" },
-    { "key": "ACH_PPD_SENDER_ID", "value": "3363903427" },
-    { "key": "WIRE_SENDER_ID",    "value": "3363903427" }
+    { "key": "ACH_PPD_SENDER_ID", "value": "3363903427" }
   ],
   "enabledProducts": ["PAYABLES", "INFORMATION_REPORTING"],
   "productConfigs": [
@@ -1039,8 +1041,7 @@ const payloads = [
   "address": { "stateProvince": "OH", "country": "US" },
   "extraDetails": [
     { "key": "ACH_CCD_SENDER_ID", "value": "4363903427" },
-    { "key": "ACH_PPD_SENDER_ID", "value": "4363903427" },
-    { "key": "WIRE_SENDER_ID",    "value": "4363903427" }
+    { "key": "ACH_PPD_SENDER_ID", "value": "4363903427" }
   ],
   "enabledProducts": ["PAYABLES", "INFORMATION_REPORTING"],
   "productConfigs": [
@@ -1052,7 +1053,7 @@ const payloads = [
   {title:"Step 4e — Add Bank Account #5 (148627760447 — Professional GDR, ACH only)",icon:"🏦",lang:"json",code:
 `// POST /api/partner-tools/v1/clients/{clientId}/bank-accounts
 // Headers: Authorization: Bearer {token} | Idempotency-Key: {unique-uuid-per-call}
-// Note: ACH only — Wires not enabled on this account; WIRE_SENDER_ID intentionally omitted.
+// Note: ACH only — Wires not enabled on this account; no wire-related extraDetails needed.
 
 {
   "accountNumber": "148627760447",
@@ -1089,15 +1090,15 @@ const payloads = [
   "accountType": "CHECKING",
   "currencyCode": "USD",
   "address": { "stateProvince": "OH", "country": "US" },
-  "extraDetails": [
-    { "key": "WIRE_SENDER_ID", "value": "1363903427" }
-  ],
+  "extraDetails": [],
   "enabledProducts": ["PAYABLES"],
   "productConfigs": [
     { "product": "POSITIVE_PAY" },
     { "product": "CHECK" }
   ]
-}`},
+}
+// Note: No extraDetails keys defined in the KeyBank Onboarding Form Guide for Wires-only accounts.
+// Confirm with KeyBank/FISPAN if any wire-specific identifiers (e.g. WIRE_SENDER_ID) are required.`},
   {title:"Step 5 — Mark Client as Reviewed (Finalize Onboarding)",icon:"✅",lang:"bash",code:
 `# POST /api/partner-tools/v1/clients/{clientId}/review
 # No request body required
